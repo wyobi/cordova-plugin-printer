@@ -261,7 +261,7 @@
     NSString* printerURL = settings[@"printer"];
     UIPrinter* printer   = [self printerWithURL:printerURL];
 
-    dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_sync(dispatch_get_main_queue(), ^{
         [ctrl printToPrinter:printer completionHandler:
          ^(UIPrintInteractionController *ctrl, BOOL ok, NSError *e) {
              [self rememberPrinter:(ok ? printer : NULL)];
