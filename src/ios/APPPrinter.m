@@ -29,7 +29,7 @@
 
 @property (nonatomic) UIPrinter *previousPrinter;
 @property (strong, nonatomic) NSDictionary *lastSettings;
-@property (strong, nonatomic) UIWebView* printView;
+@property (strong, nonatomic) WKWebView* printView;
 @property (strong, nonatomic) UIPrintInteractionController* sharedPrintControllerWithSettings;
 @property (strong, nonatomic) UIViewPrintFormatter* viewPrintFormatter;
 
@@ -192,9 +192,8 @@
     else if ([content characterAtIndex:0] == '<')
     {
         dispatch_sync(dispatch_get_main_queue(), ^{
-            self.printView = [[UIWebView alloc] init];
-            self.printView.delegate = self;
-            self.printView.suppressesIncrementalRendering = true;
+            self.printView = [[WKWebView alloc] init];
+            self.printView.navigationDelegate = self;
             self.lastSettings = settings;
             item = self.viewPrintFormatter = self.printView.viewPrintFormatter;
             [self.printView loadHTMLString:content baseURL:nil];
@@ -215,8 +214,7 @@
     }
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView
-{
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     //Check here if still webview is loding the content
      if (webView.isLoading)
      {

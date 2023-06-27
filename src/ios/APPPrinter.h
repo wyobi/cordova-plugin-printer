@@ -20,8 +20,10 @@
  */
 
 #import <Cordova/CDVPlugin.h>
+#import "WebKit/WebKit.h"
+#import <UIKit/UIKit.h>
 
-@interface APPPrinter : CDVPlugin <UIPrintInteractionControllerDelegate, UIWebViewDelegate>
+@interface APPPrinter : CDVPlugin <UIPrintInteractionControllerDelegate, WKNavigationDelegate>
 
 - (void) check:(CDVInvokedUrlCommand *)command;
 
@@ -31,8 +33,6 @@
 
 - (void) print:(CDVInvokedUrlCommand *)command;
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView;
-
-//- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error;
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation;
 
 @end
