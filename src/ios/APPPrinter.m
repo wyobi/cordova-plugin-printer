@@ -28,6 +28,10 @@
 @interface APPPrinter ()
 
 @property (nonatomic) UIPrinter *previousPrinter;
+@property (strong, nonatomic) NSDictionary *lastSettings;
+@property (strong, nonatomic) UIWebView* printView;
+@property (strong, nonatomic) UIPrintInteractionController* sharedPrintControllerWithSettings;
+@property (strong, nonatomic) UIViewPrintFormatter* viewPrintFormatter;
 
 @end
 
@@ -173,31 +177,33 @@
          withSettings:(NSDictionary *)settings
 {
     __block id item;
-    __block UIPrintInteractionController* ctrl;
-
     dispatch_sync(dispatch_get_main_queue(), ^{
-        ctrl =
-        [UIPrintInteractionController sharedPrintControllerWithSettings:settings];
+        self.sharedPrintControllerWithSettings = [UIPrintInteractionController sharedPrintControllerWithSettings:settings];
+        self.sharedPrintControllerWithSettings.delegate = self;
     });
-
-    ctrl.delegate = self;
-
+    
     if ([self strIsNullOrEmpty:content])
     {
         dispatch_sync(dispatch_get_main_queue(), ^{
             item = self.webView.viewPrintFormatter;
         });
+        [self useController:self.sharedPrintControllerWithSettings toPrintItem:item withSettings:settings];
     }
     else if ([content characterAtIndex:0] == '<')
     {
         dispatch_sync(dispatch_get_main_queue(), ^{
-            item = [[UIMarkupTextPrintFormatter alloc]
-                    initWithMarkupText:content];
+            self.printView = [[UIWebView alloc] init];
+            self.printView.delegate = self;
+            self.printView.suppressesIncrementalRendering = true;
+            self.lastSettings = settings;
+            item = self.viewPrintFormatter = self.printView.viewPrintFormatter;
+            [self.printView loadHTMLString:content baseURL:nil];
         });
     }
     else if ([NSURL URLWithString:content].scheme)
     {
         item = [APPPrinterItem ItemFromURL:content];
+        [self useController:self.sharedPrintControllerWithSettings toPrintItem:item withSettings:settings];
     }
     else
     {
@@ -205,11 +211,31 @@
             item = [[UISimpleTextPrintFormatter alloc]
                     initWithText:content];
         });
+        [self useController:self.sharedPrintControllerWithSettings toPrintItem:item withSettings:settings];
     }
-
-    [self useController:ctrl toPrintItem:item withSettings:settings];
 }
 
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    //Check here if still webview is loding the content
+     if (webView.isLoading)
+     {
+         return;
+     }
+
+     if(self.printView == webView) {
+         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+             [self useController:self.sharedPrintControllerWithSettings toPrintItem:self.viewPrintFormatter withSettings:self.lastSettings];
+         });
+     }
+}
+
+/*
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+{
+    NSLog(@"error: %@", error);
+}
+ */
 /**
  * Print the rendered content of the given view.
  *
@@ -262,12 +288,12 @@
     UIPrinter* printer   = [self printerWithURL:printerURL];
 
     dispatch_sync(dispatch_get_main_queue(), ^{
-        [ctrl printToPrinter:printer completionHandler:
-         ^(UIPrintInteractionController *ctrl, BOOL ok, NSError *e) {
-             [self rememberPrinter:(ok ? printer : NULL)];
-             [self sendResultWithMessageAsBool:ok callbackId:callbackId];
-         }];
-    });
+       [ctrl printToPrinter:printer completionHandler:
+        ^(UIPrintInteractionController *ctrl, BOOL ok, NSError *e) {
+            [self rememberPrinter:(ok ? printer : NULL)];
+            [self sendResultWithMessageAsBool:ok callbackId:callbackId];
+        }];
+   });
 }
 
 /**

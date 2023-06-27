@@ -21,7 +21,7 @@
 
 #import <Cordova/CDVPlugin.h>
 
-@interface APPPrinter : CDVPlugin <UIPrintInteractionControllerDelegate>
+@interface APPPrinter : CDVPlugin <UIPrintInteractionControllerDelegate, UIWebViewDelegate>
 
 - (void) check:(CDVInvokedUrlCommand *)command;
 
@@ -30,5 +30,9 @@
 - (void) pick:(CDVInvokedUrlCommand *)command;
 
 - (void) print:(CDVInvokedUrlCommand *)command;
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView;
+
+//- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error;
 
 @end
