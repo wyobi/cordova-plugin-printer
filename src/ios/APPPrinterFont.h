@@ -20,6 +20,9 @@
  under the License.
  */
 
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 @interface APPPrinterFont : NSObject
 
 - (instancetype) initWithDictionary:(NSDictionary *)spec;

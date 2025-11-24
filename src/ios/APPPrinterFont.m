@@ -22,6 +22,8 @@
 
 #include "APPPrinterFont.h"
 
+#import <UIKit/UIKit.h>
+
 @interface APPPrinterFont ()
 
 @property (nonatomic, retain) NSDictionary *settings;
