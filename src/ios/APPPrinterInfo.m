@@ -21,6 +21,7 @@
 
 #include "APPPrinterInfo.h"
 
+#import <UIKit/UIKit.h>
 #import <objc/message.h>
 
 @implementation APPPrinterInfo
