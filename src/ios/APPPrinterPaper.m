@@ -22,6 +22,8 @@
 #include "APPPrinterPaper.h"
 #include "APPPrinterUnit.h"
 
+#import <UIKit/UIKit.h>
+
 @implementation APPPrinterPaper
 
 #pragma mark -

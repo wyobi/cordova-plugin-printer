@@ -19,9 +19,12 @@
  under the License.
  */
 
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 @interface APPPrinterItem : NSObject
 
-+ (id) ItemFromURL:(NSString *)url;
++ (id) ItemFromURL:(nullable NSString *)url;
 
 + (BOOL) canPrintURL:(nullable NSString *)url;
 

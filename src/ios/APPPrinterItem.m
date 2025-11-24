@@ -21,6 +21,8 @@
 
 #include "APPPrinterItem.h"
 
+#import <UIKit/UIKit.h>
+
 @implementation APPPrinterItem
 
 #pragma mark -
@@ -33,7 +35,7 @@
  *
  * @return [ id ] NSURL or NSData
  */
-+ (id) ItemFromURL:(NSString *)url
++ (id) ItemFromURL:(nullable NSString *)url
 {
     return [[[APPPrinterItem alloc] init] itemFromURL:url];
 }

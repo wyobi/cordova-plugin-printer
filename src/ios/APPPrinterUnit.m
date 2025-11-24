@@ -44,24 +44,24 @@
         {
             value = [unit longValue];
         }
-        else if ([unit hasSuffix:@"pt"])
+        else if ([(NSString *)unit hasSuffix:@"pt"])
         {
-            value = [[self stringWithoutUnit:unit] doubleValue];
+            value = [[self stringWithoutUnit:(NSString *)unit] doubleValue];
         }
-        else if ([unit hasSuffix:@"in"])
+        else if ([(NSString *)unit hasSuffix:@"in"])
         {
-            value = [[self stringWithoutUnit:unit] doubleValue] * 72.0;
+            value = [[self stringWithoutUnit:(NSString *)unit] doubleValue] * 72.0;
         }
-        else if ([unit hasSuffix:@"mm"])
+        else if ([(NSString *)unit hasSuffix:@"mm"])
         {
-            value = [[self stringWithoutUnit:unit] doubleValue] * 72.0 / 25.4;
+            value = [[self stringWithoutUnit:(NSString *)unit] doubleValue] * 72.0 / 25.4;
         }
-        else if ([unit hasSuffix:@"cm"]) {
-            value = [[self stringWithoutUnit:unit] doubleValue] * 72.0 / 2.54;
+        else if ([(NSString *)unit hasSuffix:@"cm"]) {
+            value = [[self stringWithoutUnit:(NSString *)unit] doubleValue] * 72.0 / 2.54;
         }
         else
         {
-            value = [unit doubleValue];
+            value = [(NSString *)unit doubleValue];
         }
     }
     @catch (NSException *e)
