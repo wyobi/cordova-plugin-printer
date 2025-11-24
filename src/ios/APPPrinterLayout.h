@@ -19,7 +19,14 @@
  under the License.
  */
 
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 @interface APPPrinterLayout : NSObject
+
+- (instancetype) init;
+
+- (instancetype) initWithDictionary:(nullable NSDictionary *)spec;
 
 + (UIPrintFormatter *) configureFormatter:(UIPrintFormatter *)formatter withSettings:(nullable NSDictionary *)settings;
 
